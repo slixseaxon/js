@@ -8,7 +8,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useClipboard } from "hooks/useClipboard";
-import { Check, Copy } from "lucide-react";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { Highlight, Prism, themes } from "prism-react-renderer";
 import { Text } from "./text";
 
@@ -102,9 +102,9 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               size="sm"
               icon={
                 hasCopied ? (
-                  <Check className="text-green-500" size={14} />
+                  <CheckIcon className="size-4 text-green-500" />
                 ) : (
-                  <Copy size={14} />
+                  <CopyIcon className="size-4" />
                 )
               }
             />

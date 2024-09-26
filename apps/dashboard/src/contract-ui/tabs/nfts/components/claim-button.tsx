@@ -1,5 +1,5 @@
 import { useDisclosure } from "@chakra-ui/react";
-import { Gem } from "lucide-react";
+import { GemIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
 import { NFTClaimForm } from "./claim-form";
@@ -28,7 +28,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({ contract }) => {
       </Drawer>
       <Button
         colorScheme="primary"
-        leftIcon={<Gem size={16} />}
+        leftIcon={<GemIcon className="size-4" />}
         onClick={onOpen}
       >
         Claim

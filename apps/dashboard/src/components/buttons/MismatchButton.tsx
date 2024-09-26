@@ -35,7 +35,7 @@ import type {
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ExternalLinkIcon, TriangleAlert } from "lucide-react";
+import { ExternalLinkIcon, TriangleAlertIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
@@ -447,7 +447,7 @@ const MismatchNotice: React.FC<{
     <div className="flex flex-col gap-4">
       <Heading size="label.lg">
         <div className="flex flex-row items-center gap-2">
-          <TriangleAlert />
+          <TriangleAlertIcon className="size-6" />
           <span>Network Mismatch</span>
         </div>
       </Heading>

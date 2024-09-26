@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { Eye, FilePlus } from "lucide-react";
+import { EyeIcon, FilePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
 import {
@@ -181,13 +181,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
               disabled={isDisabled}
               className="gap-2"
             >
-              <FilePlus size={16} /> {selectOrUpload} {helperTextOrFile}
+              <FilePlusIcon className="size-4" /> {selectOrUpload}{" "}
+              {helperTextOrFile}
             </Button>
           )}
           {noDisplay && (
             <Link href={fileUrl} target="_blank" className="no-underline">
               <Button variant="outline" className="gap-2">
-                <Eye size={16} />
+                <EyeIcon className="size-4" />
                 View File
               </Button>
             </Link>

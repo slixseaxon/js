@@ -11,7 +11,7 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getAbsoluteUrl } from "lib/vercel-utils";
-import { Wand } from "lucide-react";
+import { WandIcon } from "lucide-react";
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { PageId } from "page-id";
@@ -149,7 +149,7 @@ const HackathonEarn = () => {
               h="68px"
               w={{ base: "100%", md: 96 }}
               fontSize="20px"
-              leftIcon={<Wand />}
+              leftIcon={<WandIcon className="size-6" />}
               color="black"
               flexShrink={0}
               background="rgba(255,255,255,1)"

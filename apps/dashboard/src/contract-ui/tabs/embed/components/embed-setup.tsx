@@ -12,7 +12,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { Check, Copy } from "lucide-react";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
@@ -566,7 +566,13 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 chainId,
               });
             }}
-            leftIcon={hasCopied ? <Check size={14} /> : <Copy size={14} />}
+            leftIcon={
+              hasCopied ? (
+                <CheckIcon className="size-4" />
+              ) : (
+                <CopyIcon className="size-4" />
+              )
+            }
           >
             {hasCopied ? "Copied!" : "Copy to clipboard"}
           </Button>

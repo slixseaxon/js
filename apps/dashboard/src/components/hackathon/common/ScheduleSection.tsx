@@ -1,6 +1,6 @@
 import { Flex, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { MoveRight } from "lucide-react";
+import { MoveRightIcon } from "lucide-react";
 import { Badge, Heading, LinkButton, Text } from "tw-components";
 
 interface ScheduleItem {
@@ -108,10 +108,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                 </Flex>
               </LinkOverlay>
             </Flex>
-            <MoveRight
-              size={16}
-              className="ml-auto hidden text-gray-300 md:block"
-            />
+            <MoveRightIcon className="ml-auto hidden size-4 text-gray-300 md:block" />
           </Flex>
         ))}
       </Flex>

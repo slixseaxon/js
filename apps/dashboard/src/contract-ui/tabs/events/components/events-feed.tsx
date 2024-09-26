@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
-import { CircleHelp } from "lucide-react";
+import { CircleHelpIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
@@ -398,7 +398,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
             }
           >
             <div className="flex items-center justify-center">
-              <CircleHelp className="text-gray-600" size={14} />
+              <CircleHelpIcon className="size-4 text-gray-600" />
             </div>
           </Tooltip>
 
