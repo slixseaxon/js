@@ -9,13 +9,12 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { Check, Copy } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { FiCopy } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
@@ -567,7 +566,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 chainId,
               });
             }}
-            leftIcon={hasCopied ? <IoMdCheckmark /> : <FiCopy />}
+            leftIcon={hasCopied ? <Check size={14} /> : <Copy size={14} />}
           >
             {hasCopied ? "Copied!" : "Copy to clipboard"}
           </Button>
