@@ -4,66 +4,66 @@ import { stringify } from "../../utils/json.js";
 import { track } from "./index.js";
 
 type SiweEvent = {
-  client: ThirdwebClient;
-  ecosystem?: Ecosystem;
-  walletAddress?: string;
-  walletType?: string;
-  chainId?: number;
-  error?: {
-    message: string;
-    code: string;
-  };
+	client: ThirdwebClient;
+	ecosystem?: Ecosystem;
+	walletAddress?: string;
+	walletType?: string;
+	chainId?: number;
+	error?: {
+		message: string;
+		code: string;
+	};
 };
 
 type SiweSuccessEvent = SiweEvent & {
-  error?: undefined;
+	error?: undefined;
 };
 
 /**
  * @internal
  */
-export function trackLogin(event: SiweSuccessEvent) {
-  trackSiweEvent({
-    ...event,
-    type: "login:success",
-  });
+export async function trackLogin(event: SiweSuccessEvent) {
+	return trackSiweEvent({
+		...event,
+		action: "login:attempt",
+	});
 }
 
 type SiweErrorEvent = SiweEvent & {
-  error: {
-    message: string;
-    code: string;
-  };
+	error: {
+		message: string;
+		code: string;
+	};
 };
 
 /**
  * @internal
  */
-export function trackLoginError(event: SiweErrorEvent) {
-  trackSiweEvent({
-    ...event,
-    type: "login:error",
-  });
+export async function trackLoginError(event: SiweErrorEvent) {
+	return trackSiweEvent({
+		...event,
+		action: "login:attempt",
+	});
 }
 
 /**
  * @internal
  */
-function trackSiweEvent(
-  event: SiweEvent & {
-    type: "login:success" | "login:error";
-  },
+async function trackSiweEvent(
+	event: SiweEvent & {
+		action: "login:attempt";
+	},
 ) {
-  track({
-    client: event.client,
-    ecosystem: event.ecosystem,
-    data: {
-      action: event.type,
-      clientId: event.client.clientId,
-      chainId: event.chainId,
-      walletAddress: event.walletAddress,
-      walletType: event.walletType,
-      errorCode: stringify(event.error),
-    },
-  });
+	return track({
+		client: event.client,
+		ecosystem: event.ecosystem,
+		data: {
+			action: event.action,
+			clientId: event.client.clientId,
+			chainId: event.chainId,
+			walletAddress: event.walletAddress,
+			walletType: event.walletType,
+			errorCode: stringify(event.error),
+		},
+	});
 }

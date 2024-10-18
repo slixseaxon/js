@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
-import { trackTransaction } from "./transaction.js";
+import { trackLogin, trackLoginError } from "./siwe.js";
 import type { ThirdwebClient } from "../../client/client.js";
 
 const server = setupServer(
@@ -10,7 +10,7 @@ const server = setupServer(
 	}),
 );
 
-describe("transaction tracking", () => {
+describe("SIWE tracking", () => {
 	beforeAll(() => server.listen());
 	afterEach(() => server.resetHandlers());
 	afterAll(() => server.close());
@@ -20,7 +20,7 @@ describe("transaction tracking", () => {
 		secretKey: undefined,
 	};
 
-	it("should track successful transactions", async () => {
+	it("should track successful logins", async () => {
 		let requestBody: any;
 		server.use(
 			http.post("https://c.thirdweb.com/event", async (handler) => {
@@ -29,33 +29,25 @@ describe("transaction tracking", () => {
 			}),
 		);
 
-		await trackTransaction({
+		await trackLogin({
 			client: mockClient,
-			transactionHash: "0xabcdef1234567890",
 			walletAddress: "0x1234567890123456789012345678901234567890",
-			walletType: "io.metamask",
+			walletType: "metamask",
 			chainId: 1,
-			contractAddress: "0x0987654321098765432109876543210987654321",
-			functionName: "transfer",
-			gasPrice: BigInt(20000000000),
 		});
 
 		expect(requestBody).toEqual({
 			source: "sdk",
-			action: "transaction:sent",
+			action: "login:attempt",
 			clientId: "test-client-id",
-			transactionHash: "0xabcdef1234567890",
 			walletAddress: "0x1234567890123456789012345678901234567890",
-			walletType: "io.metamask",
+			walletType: "metamask",
 			chainId: 1,
-			contractAddress: "0x0987654321098765432109876543210987654321",
-			functionName: "transfer",
-			gasPrice: "20000000000",
 			errorCode: undefined,
 		});
 	});
 
-	it("should track transaction errors", async () => {
+	it("should track login errors", async () => {
 		let requestBody: any;
 		server.use(
 			http.post("https://c.thirdweb.com/event", async (handler) => {
@@ -64,38 +56,30 @@ describe("transaction tracking", () => {
 			}),
 		);
 
-		await trackTransaction({
+		await trackLoginError({
 			client: mockClient,
 			walletAddress: "0x1234567890123456789012345678901234567890",
-			walletType: "io.metamask",
+			walletType: "metamask",
 			chainId: 1,
 			error: {
-				message: "Insufficient funds",
-				code: "INSUFFICIENT_FUNDS",
+				message: "Signature verification failed",
+				code: "SIGNATURE_VERIFICATION_FAILED",
 			},
 		});
 
 		expect(requestBody).toEqual({
 			source: "sdk",
-			action: "transaction:sent",
+			action: "login:attempt",
 			clientId: "test-client-id",
 			walletAddress: "0x1234567890123456789012345678901234567890",
-			walletType: "io.metamask",
+			walletType: "metamask",
 			chainId: 1,
-			errorCode: '{"message":"Insufficient funds","code":"INSUFFICIENT_FUNDS"}',
-			transactionHash: undefined,
-			contractAddress: undefined,
-			functionName: undefined,
-			gasPrice: undefined,
+			errorCode:
+				'{"message":"Signature verification failed","code":"SIGNATURE_VERIFICATION_FAILED"}',
 		});
 	});
 
 	it("should send a POST request with correct headers", async () => {
-		const mockClient: ThirdwebClient = {
-			clientId: "test-client-id",
-			secretKey: undefined,
-		};
-
 		let requestHeaders: any;
 		server.use(
 			http.post("https://c.thirdweb.com/event", (handler) => {
@@ -104,19 +88,15 @@ describe("transaction tracking", () => {
 			}),
 		);
 
-		await trackTransaction({
+		await trackLogin({
 			client: mockClient,
 			ecosystem: {
 				id: "ecosystem.test-ecosystem-id",
 				partnerId: "test-partner-id",
 			},
-			transactionHash: "0xabcdef1234567890",
 			walletAddress: "0x1234567890123456789012345678901234567890",
-			walletType: "io.metamask",
+			walletType: "metamask",
 			chainId: 1,
-			contractAddress: "0x0987654321098765432109876543210987654321",
-			functionName: "transfer",
-			gasPrice: BigInt(20000000000),
 		});
 
 		expect(requestHeaders.get("x-client-id")).toEqual("test-client-id");
