@@ -1,9 +1,11 @@
+import type { Ecosystem } from "src/wallets/in-app/core/wallet/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { stringify } from "../../utils/json.js";
 import { track } from "./index.js";
 
 type SiweEvent = {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
   walletAddress?: string;
   walletType?: string;
   chainId?: number;
@@ -52,12 +54,16 @@ function trackSiweEvent(
     type: "login:success" | "login:error";
   },
 ) {
-  track(event.client, {
-    action: event.type,
-    clientId: event.client.clientId,
-    chainId: event.chainId,
-    walletAddress: event.walletAddress,
-    walletType: event.walletType,
-    errorCode: stringify(event.error),
+  track({
+    client: event.client,
+    ecosystem: event.ecosystem,
+    data: {
+      action: event.type,
+      clientId: event.client.clientId,
+      chainId: event.chainId,
+      walletAddress: event.walletAddress,
+      walletType: event.walletType,
+      errorCode: stringify(event.error),
+    },
   });
 }
