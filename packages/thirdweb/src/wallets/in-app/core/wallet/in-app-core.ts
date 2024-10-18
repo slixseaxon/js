@@ -78,6 +78,7 @@ export function createInAppWallet(args: {
       chain = connectedChain;
       trackConnect({
         client: options.client,
+        ecosystem,
         walletType: walletId,
         walletAddress: account.address,
       });
@@ -103,6 +104,7 @@ export function createInAppWallet(args: {
       chain = connectedChain;
       trackConnect({
         client: options.client,
+        ecosystem,
         walletType: walletId,
         walletAddress: account.address,
       });

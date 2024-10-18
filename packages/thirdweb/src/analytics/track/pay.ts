@@ -1,11 +1,13 @@
+import type { Ecosystem } from "src/wallets/in-app/core/wallet/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { track } from "./index.js";
 
 /**
  * @internal
  */
-export function trackPayEvent(args: {
+export async function trackPayEvent(args: {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
   event: string;
   walletAddress?: string;
   walletType?: string;
@@ -16,16 +18,20 @@ export function trackPayEvent(args: {
   chainId?: number;
   dstChainId?: number;
 }) {
-  track(args.client, {
-    source: "pay",
-    action: args.event,
-    clientId: args.client.clientId,
-    chainId: args.chainId,
-    walletAddress: args.walletAddress,
-    walletType: args.walletType,
-    tokenAddress: args.fromToken,
-    amountWei: args.fromAmount,
-    dstTokenAddress: args.toToken,
-    dstChainId: args.chainId,
+  return track({
+    client: args.client,
+    ecosystem: args.ecosystem,
+    data: {
+      source: "pay",
+      action: args.event,
+      clientId: args.client.clientId,
+      chainId: args.chainId,
+      walletAddress: args.walletAddress,
+      walletType: args.walletType,
+      tokenAddress: args.fromToken,
+      amountWei: args.fromAmount,
+      dstTokenAddress: args.toToken,
+      dstChainId: args.chainId,
+    },
   });
 }
