@@ -184,7 +184,7 @@ export function createWallet<const ID extends WalletId>(
         chain = undefined;
       }
 
-      let handleDisconnect = async () => { };
+      let handleDisconnect = async () => {};
 
       const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
         reset();

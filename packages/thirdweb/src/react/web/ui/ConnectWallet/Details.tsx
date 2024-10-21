@@ -773,7 +773,7 @@ function DetailsModal(props: {
         // add currently connected chain to the list of chains if it's not already in the list
         chains={
           walletChain &&
-            props.chains.find((c) => c.id === walletChain.id) === undefined
+          props.chains.find((c) => c.id === walletChain.id) === undefined
             ? [walletChain, ...props.chains]
             : props.chains
         }
@@ -995,7 +995,7 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
 });
 
 const StyledChevronRightIcon = /* @__PURE__ */ styled(
-	/* @__PURE__ */ ChevronRightIcon,
+  /* @__PURE__ */ ChevronRightIcon,
 )(() => {
   const theme = useCustomTheme();
   return {

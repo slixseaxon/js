@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
-import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
-import { trackConnect } from "./connect.js";
+import { setupServer } from "msw/node";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type { ThirdwebClient } from "../../client/client.js";
+import { trackConnect } from "./connect.js";
 
 const server = setupServer(
   http.post("https://c.thirdweb.com/event", () => {
@@ -21,7 +21,7 @@ describe("trackConnect", () => {
       secretKey: undefined,
     };
 
-    let requestBody: any;
+    let requestBody: unknown;
     server.use(
       http.post("https://c.thirdweb.com/event", async (handler) => {
         requestBody = await handler.request.json();
@@ -49,7 +49,7 @@ describe("trackConnect", () => {
       secretKey: undefined,
     };
 
-    let requestHeaders: any;
+    let requestHeaders: Headers | undefined;
     server.use(
       http.post("https://c.thirdweb.com/event", (handler) => {
         requestHeaders = handler.request.headers;
@@ -67,11 +67,11 @@ describe("trackConnect", () => {
       walletAddress: "0x1234567890123456789012345678901234567890",
     });
 
-    expect(requestHeaders.get("x-client-id")).toEqual("test-client-id");
-    expect(requestHeaders.get("x-ecosystem-id")).toEqual(
+    expect(requestHeaders?.get("x-client-id")).toEqual("test-client-id");
+    expect(requestHeaders?.get("x-ecosystem-id")).toEqual(
       "ecosystem.test-ecosystem-id",
     );
-    expect(requestHeaders.get("x-ecosystem-partner-id")).toEqual(
+    expect(requestHeaders?.get("x-ecosystem-partner-id")).toEqual(
       "test-partner-id",
     );
   });

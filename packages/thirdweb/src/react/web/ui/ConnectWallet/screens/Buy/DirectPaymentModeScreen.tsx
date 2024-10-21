@@ -89,23 +89,23 @@ export function DirectPaymentModeScreen(props: {
 
   const token: TokenInfo = paymentInfo.token
     ? {
-      ...paymentInfo.token,
-      icon:
-        paymentInfo.token?.icon ||
-        supportedDestinations
-          .find((c) => c.chain.id === paymentInfo.chain.id)
-          ?.tokens.find(
-            (t) =>
-              t.address.toLowerCase() ===
-              paymentInfo.token?.address.toLowerCase(),
-          )?.icon,
-    }
+        ...paymentInfo.token,
+        icon:
+          paymentInfo.token?.icon ||
+          supportedDestinations
+            .find((c) => c.chain.id === paymentInfo.chain.id)
+            ?.tokens.find(
+              (t) =>
+                t.address.toLowerCase() ===
+                paymentInfo.token?.address.toLowerCase(),
+            )?.icon,
+      }
     : {
-      address: NATIVE_TOKEN_ADDRESS,
-      name: chainData.nativeCurrency.name,
-      symbol: chainData.nativeCurrency.symbol,
-      icon: chainData.icon?.url,
-    };
+        address: NATIVE_TOKEN_ADDRESS,
+        name: chainData.nativeCurrency.name,
+        symbol: chainData.nativeCurrency.symbol,
+        icon: chainData.icon?.url,
+      };
 
   return (
     <Container p="lg">

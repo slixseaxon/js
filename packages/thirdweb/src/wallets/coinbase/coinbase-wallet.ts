@@ -29,7 +29,7 @@ export function coinbaseWalletSDK(args: {
     chain = undefined;
   }
 
-  let handleDisconnect = async () => { };
+  let handleDisconnect = async () => {};
 
   let handleSwitchChain = async (newChain: Chain) => {
     chain = newChain;

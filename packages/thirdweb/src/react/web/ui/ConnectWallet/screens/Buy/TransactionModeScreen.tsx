@@ -169,16 +169,16 @@ export function TransactionModeScreen(props: {
                 {sponsoredTransactionsEnabled
                   ? "Sponsored"
                   : `${String(
-                    formatNumber(
-                      Number(
-                        toTokens(
-                          transactionCostAndData.gasCostWei,
-                          chainData.nativeCurrency.decimals,
+                      formatNumber(
+                        Number(
+                          toTokens(
+                            transactionCostAndData.gasCostWei,
+                            chainData.nativeCurrency.decimals,
+                          ),
                         ),
+                        6,
                       ),
-                      6,
-                    ),
-                  )} ${chainData.nativeCurrency.symbol}`}
+                    )} ${chainData.nativeCurrency.symbol}`}
               </Text>
             </Container>
           </Container>
