@@ -1,4 +1,4 @@
-import type { Ecosystem } from "src/wallets/in-app/core/wallet/types.js";
+import type { Ecosystem } from "../../wallets/in-app/core/wallet/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { stringify } from "../../utils/json.js";
 import { track } from "./index.js";
@@ -15,31 +15,10 @@ type SiweEvent = {
 	};
 };
 
-type SiweSuccessEvent = SiweEvent & {
-	error?: undefined;
-};
-
 /**
  * @internal
  */
-export async function trackLogin(event: SiweSuccessEvent) {
-	return trackSiweEvent({
-		...event,
-		action: "login:attempt",
-	});
-}
-
-type SiweErrorEvent = SiweEvent & {
-	error: {
-		message: string;
-		code: string;
-	};
-};
-
-/**
- * @internal
- */
-export async function trackLoginError(event: SiweErrorEvent) {
+export async function trackLogin(event: SiweEvent) {
 	return trackSiweEvent({
 		...event,
 		action: "login:attempt",

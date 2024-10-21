@@ -9,10 +9,7 @@ import {
 	serializeTypedData,
 	validateTypedData,
 } from "viem";
-import {
-	trackTransaction,
-	trackTransactionError,
-} from "../../analytics/track/transaction.js";
+import { trackTransaction } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import {
 	getCachedChain,
@@ -20,7 +17,6 @@ import {
 	getRpcUrlForChain,
 } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { getAddress } from "../../utils/address.js";
 import {
 	type Hex,

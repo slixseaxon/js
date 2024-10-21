@@ -56,7 +56,7 @@ describe("SIWE tracking", () => {
 			}),
 		);
 
-		await trackLoginError({
+		await trackLogin({
 			client: mockClient,
 			walletAddress: "0x1234567890123456789012345678901234567890",
 			walletType: "metamask",

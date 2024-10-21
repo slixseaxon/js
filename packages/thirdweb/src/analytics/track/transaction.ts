@@ -1,4 +1,4 @@
-import type { Ecosystem } from "src/wallets/in-app/core/wallet/types.js";
+import type { Ecosystem } from "../../wallets/in-app/core/wallet/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { stringify } from "../../utils/json.js";
 import type { WalletId } from "../../wallets/wallet-types.js";

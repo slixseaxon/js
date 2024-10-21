@@ -1,14 +1,10 @@
 import type * as ethers5 from "ethers5";
 import type { TypedDataDefinition } from "viem";
-import {
-	trackTransaction,
-	trackTransactionError,
-} from "../../../../analytics/track/transaction.js";
+import { trackTransaction } from "../../../../analytics/track/transaction.js";
 import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
-import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { getAddress } from "../../../../utils/address.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
