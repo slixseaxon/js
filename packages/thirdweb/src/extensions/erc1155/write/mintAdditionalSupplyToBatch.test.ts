@@ -7,7 +7,10 @@ import { getContract } from "../../../contract/contract.js";
 import { deployERC1155Contract } from "../../../extensions/prebuilts/deploy-erc1155.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getNFTs } from "../read/getNFTs.js";
-import { mintAdditionalSupplyToBatch } from "./mintAdditionalSupplyToBatch.js";
+import {
+  mintAdditionalSupplyToBatch,
+  optimizeMintBatchContent,
+} from "./mintAdditionalSupplyToBatch.js";
 import { mintToBatch } from "./mintToBatch.js";
 
 const chain = ANVIL_CHAIN;
@@ -17,6 +20,19 @@ const account = TEST_ACCOUNT_C;
 describe.runIf(process.env.TW_SECRET_KEY)(
   "ERC1155 Edition: mintToBatch",
   () => {
+    it("should optimize the mint content", () => {
+      expect(
+        optimizeMintBatchContent([
+          { tokenId: 0n, supply: 99n, to: account.address },
+          { tokenId: 1n, supply: 49n, to: account.address },
+          { tokenId: 1n, supply: 51n, to: account.address },
+        ]),
+      ).toStrictEqual([
+        { tokenId: 0n, supply: 99n, to: account.address },
+        { tokenId: 1n, supply: 100n, to: account.address },
+      ]);
+    });
+
     it("should mint multiple tokens in one tx", async () => {
       const contract = getContract({
         chain,
@@ -52,8 +68,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           contract,
           nfts: [
             { tokenId: 0n, supply: 99n, to: account.address },
-            { tokenId: 1n, supply: 98n, to: account.address },
+            { tokenId: 1n, supply: 94n, to: account.address },
             { tokenId: 2n, supply: 97n, to: account.address },
+            { tokenId: 1n, supply: 4n, to: account.address },
           ],
         }),
       });
