@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.64.0
+
+### Minor Changes
+
+- [#5062](https://github.com/thirdweb-dev/js/pull/5062) [`0cafa33`](https://github.com/thirdweb-dev/js/commit/0cafa33a1886a7d813d78b8fcb77cf0e2e638594) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds GitHub authentication
+
+- [#5036](https://github.com/thirdweb-dev/js/pull/5036) [`f8c981c`](https://github.com/thirdweb-dev/js/commit/f8c981c0ca3dd34505f77fab6e4d3aba3f2bf852) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add new ERC1155 extension: mintAdditionalSupplyToBatch
+
+### Patch Changes
+
+- [#5091](https://github.com/thirdweb-dev/js/pull/5091) [`45fcfb1`](https://github.com/thirdweb-dev/js/commit/45fcfb1daefeb30440650aae2febb67212576b7f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support smart account options for ecosystem wallets
+
+- [#5090](https://github.com/thirdweb-dev/js/pull/5090) [`50f98d7`](https://github.com/thirdweb-dev/js/commit/50f98d7486809c541252a9cfc6979d102960366b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix useProfiles not updating when connecting to a different account
+
 ## 5.63.2
 
 ### Patch Changes
