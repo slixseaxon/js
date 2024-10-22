@@ -10,10 +10,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { transferBatch } from "thirdweb/extensions/erc20";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
-import {
-  AirdropUploadERC20,
-  type ERC20AirdropAddressInput,
-} from "./airdrop-upload-erc20";
+import { type AirdropAddressInput, AirdropUpload } from "./airdrop-upload";
 interface TokenAirdropFormProps {
   contract: ThirdwebContract;
   toggle?: Dispatch<SetStateAction<boolean>>;
@@ -25,7 +22,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   toggle,
 }) => {
   const { handleSubmit, setValue, watch } = useForm<{
-    addresses: ERC20AirdropAddressInput[];
+    addresses: AirdropAddressInput[];
   }>({
     defaultValues: { addresses: [] },
   });
@@ -89,7 +86,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
         >
           <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
             {airdropFormOpen ? (
-              <AirdropUploadERC20
+              <AirdropUpload
                 onClose={() => setAirdropFormOpen(false)}
                 setAirdrop={(value) =>
                   setValue("addresses", value, { shouldDirty: true })

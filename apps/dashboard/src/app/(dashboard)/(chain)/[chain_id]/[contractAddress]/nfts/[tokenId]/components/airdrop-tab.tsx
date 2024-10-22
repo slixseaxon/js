@@ -1,17 +1,28 @@
 "use client";
 
-import { Flex, useDisclosure } from "@chakra-ui/react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { UploadIcon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
-import { type AirdropAddressInput, AirdropUpload } from "./airdrop-upload";
+import {
+  type AirdropAddressInput,
+  AirdropUpload,
+} from "../../../tokens/components/airdrop-upload";
 
 interface AirdropTabProps {
   contract: ThirdwebContract;
@@ -31,11 +42,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
     defaultValues: { addresses: [] },
   });
   const trackEvent = useTrack();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { mutate, isPending } = useSendAndConfirmTransaction();
-
   const { onSuccess, onError } = useTxNotifications(
     "Airdrop successful",
     "Error transferring",
@@ -43,6 +50,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   );
 
   const addresses = watch("addresses");
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -109,22 +117,29 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
       >
         <div className="flex flex-col gap-2">
           <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
-            <AirdropUpload
-              isOpen={isOpen}
-              onClose={onClose}
-              setAirdrop={(value) =>
-                setValue("addresses", value, { shouldDirty: true })
-              }
-            />
             <Flex direction={{ base: "column", md: "row" }} gap={4}>
-              <Button
-                colorScheme="primary"
-                borderRadius="md"
-                onClick={onOpen}
-                rightIcon={<UploadIcon className="size-5" />}
-              >
-                Upload addresses
-              </Button>
+              <Sheet open={open} onOpenChange={setOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    colorScheme="primary"
+                    borderRadius="md"
+                    rightIcon={<UploadIcon className="size-5" />}
+                  >
+                    Upload addresses
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="z-[10000] overflow-y-auto sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
+                  <SheetHeader>
+                    <SheetTitle>Aidrop NFTs</SheetTitle>
+                  </SheetHeader>
+                  <AirdropUpload
+                    onClose={() => setOpen(false)}
+                    setAirdrop={(value) =>
+                      setValue("addresses", value, { shouldDirty: true })
+                    }
+                  />
+                </SheetContent>
+              </Sheet>
 
               <Flex
                 gap={2}
