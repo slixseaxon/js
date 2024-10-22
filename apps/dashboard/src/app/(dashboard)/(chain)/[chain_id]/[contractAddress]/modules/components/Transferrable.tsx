@@ -20,6 +20,9 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress } from "thirdweb";
 import { z } from "zod";
+import { useModuleContractInfo } from "./moduleContractInfo";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 
 const formSchema = z.object({
   allowList: z.array(
@@ -44,11 +47,14 @@ const formSchema = z.object({
 export type TransferrableModuleFormValues = z.infer<typeof formSchema>;
 
 export function TransferrableModuleUI(props: {
+  contractInfo: ReturnType<typeof useModuleContractInfo>;
+  moduleAddress: string;
   allowList: string[];
   isRestricted: boolean;
   isPending: boolean;
   adminAddress: string;
   update: (values: TransferrableModuleFormValues) => Promise<void>;
+  remove: () => Promise<void>;
 }) {
   const form = useForm<TransferrableModuleFormValues>({
     resolver: zodResolver(formSchema),
@@ -85,6 +91,10 @@ export function TransferrableModuleUI(props: {
 
   const isRestricted = form.watch("isRestricted");
 
+  if (!props.contractInfo) {
+    return <Skeleton className="h-[400px] w-full" />;
+  }
+
   return (
     <section>
       <Form {...form}>
@@ -94,14 +104,53 @@ export function TransferrableModuleUI(props: {
         >
           <div className="p-4 lg:p-6">
             {/* Title */}
-            <h3 className="text-xl font-semibold tracking-tight">
-              Transferrable
-            </h3>
+            <div className="flex justify-between">
+              <h3 className="text-xl font-semibold tracking-tight">
+                {props.contractInfo.name || "..."}
+              </h3>
+
+              <ToolTipLabel label="Remove Module">
+                <Button
+                  onClick={() => setIsUninstallModalOpen(true)}
+                  variant="outline"
+                  className="rounded-xl p-3 text-red-500"
+                >
+                  {uninstallMutation.isPending ? (
+                    <Spinner className="size-4" />
+                  ) : (
+                    <TrashIcon className="size-4" />
+                  )}
+                </Button>
+              </ToolTipLabel>
+            </div>
 
             {/* Description */}
             <p className="text-muted-foreground">
-              Determine who can transfer tokens on this contract
+              {props.contractInfo.description || "..."}
             </p>
+
+            <div className="h-5" />
+
+            <div className="flex flex-col gap-x-8 gap-y-4 md:flex-row">
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">
+                  Published by:{" "}
+                </p>
+                <WalletAddress address={props.contractInfo.publisher || ""} />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">
+                  Module Address:{" "}
+                </p>
+                <CopyAddressButton
+                  className="text-xs"
+                  address={props.moduleAddress || ""}
+                  copyIconPosition="left"
+                  variant="outline"
+                />
+              </div>
+            </div>
 
             <div className="h-5" />
 

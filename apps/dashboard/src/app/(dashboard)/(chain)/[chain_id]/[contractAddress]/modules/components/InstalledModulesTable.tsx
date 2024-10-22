@@ -43,7 +43,7 @@ export const InstalledModulesTable = (props: {
   const { installedModules, ownerAccount } = props;
 
   const sectionTitle = (
-    <h2 className="mb-3 font-bold text-2xl tracking-tight">
+    <h2 className="mb-3 text-2xl font-bold tracking-tight">
       Installed Modules
     </h2>
   );
@@ -66,78 +66,31 @@ export const InstalledModulesTable = (props: {
     <>
       {sectionTitle}
       <ScrollShadow scrollableClassName="rounded-lg">
-        <table className="w-full selection:bg-inverted selection:text-inverted-foreground">
-          <thead>
-            <TableHeadingRow>
-              <TableHeading> Module Name </TableHeading>
-              <TableHeading> Description </TableHeading>
-              <TableHeading> Publisher Address </TableHeading>
-              <TableHeading> Module Address </TableHeading>
-              <TableHeading> Version </TableHeading>
-              {ownerAccount && <TableHeading> Remove </TableHeading>}
-            </TableHeadingRow>
-          </thead>
-
-          <tbody>
-            {installedModules.isPending ? (
-              <>
-                <SkeletonRow ownerAccount={ownerAccount} />
-                <SkeletonRow ownerAccount={ownerAccount} />
-                <SkeletonRow ownerAccount={ownerAccount} />
-              </>
-            ) : (
-              <>
-                {installedModules.data?.map((e, i) => (
-                  <ModuleRow
-                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    key={i}
-                    moduleAddress={e}
-                    contract={props.contract}
-                    onRemoveModule={props.refetchModules}
-                    ownerAccount={ownerAccount}
-                  />
-                ))}
-              </>
-            )}
-          </tbody>
-        </table>
+        <div className="flex flex-col gap-6">
+          {installedModules.data?.map((e, i) => (
+            <ModuleTemplate
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+              key={i}
+              moduleAddress={e}
+              contract={props.contract}
+              onRemoveModule={props.refetchModules}
+              ownerAccount={ownerAccount}
+            />
+          ))}
+        </div>
       </ScrollShadow>
     </>
   );
 };
 
-function SkeletonRow(props: { ownerAccount?: Account }) {
+function SkeletonModule() {
   return (
-    <TableRow>
-      <TableData>
-        <Skeleton className="h-6" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-6" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-6" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-6" />
-      </TableData>
-
-      {/* Version */}
-      <TableData>
-        <Skeleton className="h-6" />
-      </TableData>
-
-      {/* Remove */}
-      {props.ownerAccount && (
-        <TableData>
-          <Skeleton className="h-6" />
-        </TableData>
-      )}
-    </TableRow>
-  );
+    <div className="h-[400px] w-full" />
+  )
 }
 
-function ModuleRow(props: {
+
+function ModuleTemplate(props: {
   moduleAddress: string;
   contract: ContractOptions;
   onRemoveModule: () => void;
@@ -191,124 +144,110 @@ function ModuleRow(props: {
   };
 
   if (!contractInfo) {
-    return <SkeletonRow ownerAccount={ownerAccount} />;
+    return <SkeletonModule />;
   }
 
   return (
-    <TableRow>
-      <TableData>
-        <p>{contractInfo.name}</p>
-      </TableData>
-      <TableData>
-        <p>{contractInfo.description || "..."}</p>
-      </TableData>
-      <TableData>
-        <WalletAddress address={contractInfo.publisher || ""} />
-      </TableData>
-      <TableData>
-        <CopyAddressButton
-          className="text-xs"
-          address={moduleAddress || ""}
-          copyIconPosition="left"
-          variant="outline"
-        />
-      </TableData>
+    <section>
+      <div className="rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
+        {/* Title */}
+        <div className="flex justify-between">
+          <h3 className="text-xl font-semibold tracking-tight">
+            {contractInfo.name || "..."}
+          </h3>
 
-      {/* Version */}
-      <TableData>
-        <p>{contractInfo.version}</p>
-      </TableData>
+          <ToolTipLabel label="Remove Module">
+            <Button
+              onClick={() => setIsUninstallModalOpen(true)}
+              variant="outline"
+              className="rounded-xl p-3 text-red-500"
+            >
+              {uninstallMutation.isPending ? (
+                <Spinner className="size-4" />
+              ) : (
+                <TrashIcon className="size-4" />
+              )}
+            </Button>
+          </ToolTipLabel>
+        </div>
 
-      {/* Remove */}
-      {ownerAccount && (
-        <TableData>
-          <div>
-            <ToolTipLabel label="Remove Module">
-              <Button
-                onClick={() => setIsUninstallModalOpen(true)}
-                variant="outline"
-                className="rounded-xl p-3 text-red-500"
-              >
-                {uninstallMutation.isPending ? (
-                  <Spinner className="size-4" />
-                ) : (
-                  <TrashIcon className="size-4" />
-                )}
-              </Button>
-            </ToolTipLabel>
+        {/* Description */}
+        <p className="text-muted-foreground">
+          {contractInfo.description || "..."}
+        </p>
+
+        <div className="h-5" />
+
+        <div className="flex flex-col gap-x-8 gap-y-4 md:flex-row">
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-muted-foreground">
+              Published by:{" "}
+            </p>
+            <WalletAddress address={contractInfo.publisher || ""} />
           </div>
-        </TableData>
-      )}
 
-      <Dialog
-        open={isUninstallModalOpen}
-        onOpenChange={setIsUninstallModalOpen}
-      >
-        <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleRemove();
-            }}
-          >
-            <DialogHeader>
-              <DialogTitle>Uninstall Module</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to uninstall{" "}
-                <span className="font-medium text-foreground ">
-                  {contractInfo.name}
-                </span>{" "}
-                ?
-              </DialogDescription>
-            </DialogHeader>
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-muted-foreground">
+              Module Address:{" "}
+            </p>
+            <CopyAddressButton
+              className="text-xs"
+              address={props.moduleAddress || ""}
+              copyIconPosition="left"
+              variant="outline"
+            />
+          </div>
+        </div>
 
-            <DialogFooter className="mt-10 flex-row justify-end gap-3 md:gap-1">
-              <Button
-                type="button"
-                onClick={() => setIsUninstallModalOpen(false)}
-                variant="outline"
-              >
-                Cancel
-              </Button>
+        <div className="h-5" />
 
-              <TransactionButton
-                txChainID={contract.chain.id}
-                transactionCount={1}
-                isLoading={uninstallMutation.isPending}
-                type="submit"
-                colorScheme="red"
-                className="flex"
-              >
-                Uninstall
-              </TransactionButton>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </TableRow>
-  );
+        <Dialog
+          open={isUninstallModalOpen}
+          onOpenChange={setIsUninstallModalOpen}
+        >
+          <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleRemove();
+              }}
+            >
+              <DialogHeader>
+                <DialogTitle>Uninstall Module</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to uninstall{" "}
+                  <span className="font-medium text-foreground ">
+                    {contractInfo.name}
+                  </span>{" "}
+                  ?
+                </DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter className="mt-10 flex-row justify-end gap-3 md:gap-1">
+                <Button
+                  type="button"
+                  onClick={() => setIsUninstallModalOpen(false)}
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+
+                <TransactionButton
+                  txChainID={contract.chain.id}
+                  transactionCount={1}
+                  isLoading={uninstallMutation.isPending}
+                  type="submit"
+                  colorScheme="red"
+                  className="flex"
+                >
+                  Uninstall
+                </TransactionButton>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </section >
+  )
 }
 
-function TableRow(props: { children: React.ReactNode }) {
-  return (
-    <tr className="border-border border-b [&:last-child]:border-b-0">
-      {props.children}
-    </tr>
-  );
-}
-
-function TableData({ children }: { children: React.ReactNode }) {
-  return <td className="px-3 py-4 text-sm">{children}</td>;
-}
-
-function TableHeading(props: { children: React.ReactNode }) {
-  return (
-    <th className="min-w-[150px] border-border border-b px-3 py-3 text-left font-medium text-muted-foreground text-sm">
-      {props.children}
-    </th>
-  );
-}
-
-function TableHeadingRow({ children }: { children: React.ReactNode }) {
-  return <tr className="relative bg-muted/50">{children}</tr>;
-}
