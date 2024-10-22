@@ -29,10 +29,10 @@ export type UserStatus = {
   linkedAccounts: {
     type: string;
     details:
-      | { email: string; [key: string]: string }
-      | { phone: string; [key: string]: string }
-      | { address: string; [key: string]: string }
-      | { id: string; [key: string]: string };
+    | { email: string;[key: string]: string }
+    | { phone: string;[key: string]: string }
+    | { address: string;[key: string]: string }
+    | { id: string;[key: string]: string };
   }[];
   wallets: UserWallet[];
   id: string;
@@ -131,6 +131,7 @@ export class EnclaveWallet implements IWebWallet {
     const client = this.client;
     const storage = this.localStorage;
     const address = this.address;
+    const ecosystem = this.ecosystem;
 
     const _signTransaction = async (tx: SendTransactionOption) => {
       const rpcRequest = getRpcClient({
@@ -145,15 +146,15 @@ export class EnclaveWallet implements IWebWallet {
         nonce: tx.nonce
           ? toHex(tx.nonce)
           : toHex(
-              await import(
-                "../../../../rpc/actions/eth_getTransactionCount.js"
-              ).then(({ eth_getTransactionCount }) =>
-                eth_getTransactionCount(rpcRequest, {
-                  address: this.address,
-                  blockTag: "pending",
-                }),
-              ),
+            await import(
+              "../../../../rpc/actions/eth_getTransactionCount.js"
+            ).then(({ eth_getTransactionCount }) =>
+              eth_getTransactionCount(rpcRequest, {
+                address: this.address,
+                blockTag: "pending",
+              }),
             ),
+          ),
         chainId: toHex(tx.chainId),
       };
 
@@ -198,9 +199,9 @@ export class EnclaveWallet implements IWebWallet {
           signedTx,
         );
 
-        // Non-blocking wait for receipt to track transaction
         trackTransaction({
           client,
+          ecosystem,
           walletAddress: address,
           walletType: "inApp",
           transactionHash,
